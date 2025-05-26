@@ -6,7 +6,8 @@ using UnityEngine.Rendering.Universal;
 [DisallowMultipleRendererFeature("Color Blindness")]
 public class ColorBlindnessRendererFeature : ScriptableRendererFeature
 {
-    [SerializeField, Reload("Shaders/ColorBlindness.shader")]
+    [SerializeField]
+    [Reload("Shaders/ColorBlindness.shader")]
     private Shader m_Shader;
     private Material m_Material;
 
@@ -29,6 +30,11 @@ public class ColorBlindnessRendererFeature : ScriptableRendererFeature
     }
 
     private ColorBlindnessRenderPass m_ColorBlindnessPass;
+
+    private void Awake()
+    {
+        ResourceReloader.ReloadAllNullIn(this, ColorBlindnessPackage.packagePath);
+    }
 
     public override void Create()
     {
