@@ -1,0 +1,20 @@
+{
+    "name": "SRP.ColorBlindness.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:874642f25e7f3e842903fa1a4d0ce294",
+        "GUID:3eae0364be2026648bf74846acb8a731",
+        "GUID:c579267770062bf448e75eb160330b7f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
