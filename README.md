@@ -1,8 +1,5 @@
 # Unity SRP 'Color Blindness' Post Effect
-Now you can easily add support of this effect to every your URP projects in two simple steps:
-#### 1) Add renderer feature to your URP Renderer
-#### 2) Add renderer override to your URP Volume
-That's it!
+Simple package to get color blindness support into your game.
 
 ## Features
 Support of all major types of blindness:
@@ -23,6 +20,27 @@ The latest version can be installed via [package manager](https://docs.unity3d.c
 ```
 https://github.com/am1goo/unity-srp-colorblindness.git#1.0.0
 ```
+
+## How to use?
+You can easily add support of this effect to every your URP projects in two simple steps:
+#### 1) Add renderer feature to your URP Renderer
+`Your Renderer Data` -> `Add Renderer Feature` -> `Color Blindness`
+<p align="left">
+  <img src="Readme/urp-feature-1.png" alt="urp-feature-1"/>
+  <img src="Readme/urp-feature-2.png" alt="urp-feature-2"/>
+</p>
+
+#### 2) Add renderer override to your URP Volume
+`Your Volume Profile` -> `Add Override` -> `Post-processing (am1goo)` -> `Color Blindness`
+<p align="left">
+  <img src="Readme/urp-override-1.png" alt="urp-override-1"/>
+  <img src="Readme/urp-override-2.png" alt="urp-override-2"/>
+</p>
+
+That's it!
+
+## Limitations
+- *UI with Screen Space - Overlay* is not supported.
 
 ## Requirements
 - Universal Render Pipeline 14.0.2
