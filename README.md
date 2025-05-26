@@ -1,5 +1,5 @@
 # Unity SRP 'Color Blindness' Post Effect
-Simple package to get color blindness support into your game.
+Simple package to bring color blindness support into your game.
 <p align="left">
   <img src="Readme/promo-art.png" alt="promo-art" width=75%/>
 </p>
