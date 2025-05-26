@@ -33,7 +33,9 @@ public class ColorBlindnessRendererFeature : ScriptableRendererFeature
 
     private void Awake()
     {
+#if UNITY_EDITOR
         ResourceReloader.ReloadAllNullIn(this, ColorBlindnessPackage.packagePath);
+#endif
     }
 
     public override void Create()
