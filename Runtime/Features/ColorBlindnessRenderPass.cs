@@ -43,7 +43,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         _currentChannels = null;
     }
 
-    private void UpdateSettings()
+    private void UpdateSettings(Material material)
     {
         var component = VolumeManager.instance.stack.GetComponent<ColorBlindness>();
         if (component == null || component.IsActive() == false)
@@ -60,9 +60,9 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
             _currentChannels = channels;
             if (_currentChannels != null)
             {
-                _material.SetVector(_redChannelID, _currentChannels.red);
-                _material.SetVector(_greenChannelID, _currentChannels.green);
-                _material.SetVector(_blueChannelID, _currentChannels.blue);
+                material.SetVector(_redChannelID, _currentChannels.red);
+                material.SetVector(_greenChannelID, _currentChannels.green);
+                material.SetVector(_blueChannelID, _currentChannels.blue);
             }
         }
     }
@@ -101,10 +101,10 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         if (renderingData.postProcessingEnabled == false)
             return;
 
-        UpdateSettings();
-
         if (_material == null)
             return;
+
+        UpdateSettings(_material);
 
         if (_currentChannels == null)
             return;
