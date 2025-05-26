@@ -1,11 +1,14 @@
-Shader "Hidden/Achromatopsia"
+Shader "Hidden/Color Blindness"
 {
     Properties
     {
         _MainTex("Texture", 2D) = "white" {}
+        _RedChannel("Red Channel", Color) = (1, 0, 0, 0)
+        _GreenChannel("Green Channel", Color) = (0, 1, 0, 0)
+        _BlueChannel("Blue Channel", Color) = (0, 0, 1, 0)
     }
 
-        SubShader
+    SubShader
     {
         // No culling or depth
         Cull Off ZWrite Off ZTest Always
@@ -39,19 +42,18 @@ Shader "Hidden/Achromatopsia"
             }
 
             sampler2D _MainTex;
+            fixed3 _RedChannel;
+            fixed3 _GreenChannel;
+            fixed3 _BlueChannel;
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 _R = fixed4(0.299, 0.587, 0.114, 1);
-                fixed4 _G = fixed4(0.299, 0.587, 0.114, 1);
-                fixed4 _B = fixed4(0.299, 0.587, 0.114, 1);
-
                 fixed4 c = tex2D(_MainTex, i.uv);
                 return fixed4
                 (
-                    c.r * _R.r + c.g * _R.g + c.b * _R.b,
-                    c.r * _G.r + c.g * _G.g + c.b * _G.b,
-                    c.r * _B.r + c.g * _B.g + c.b * _B.b,
+                    c.r * _RedChannel.r + c.g * _RedChannel.g + c.b * _RedChannel.b,
+                    c.r * _GreenChannel.r + c.g * _GreenChannel.g + c.b * _GreenChannel.b,
+                    c.r * _BlueChannel.r + c.g * _BlueChannel.g + c.b * _BlueChannel.b,
                     c.a
                 );
             }

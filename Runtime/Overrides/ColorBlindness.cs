@@ -31,8 +31,27 @@ namespace UnityEngine.Rendering.Universal
     {
         Normal          = 0,
         Protanopia      = 1,
-        Deuteranopia    = 2,
-        Tritanopia      = 3,
-        Achromatopsia   = 4,
+        Protanomaly     = 2,
+        Deuteranopia    = 3,
+        Deuteranomaly   = 4,
+        Tritanopia      = 5,
+        Tritanomaly     = 6,
+        Achromatopsia   = 7,
+        Achromatomaly   = 8,
+    }
+
+    [Serializable]
+    public class ColorBlindnessChannels
+    {
+        public Vector3 red;
+        public Vector3 green;
+        public Vector3 blue;
+
+        public ColorBlindnessChannels(Vector3 red, Vector3 green, Vector3 blue)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
     }
 }

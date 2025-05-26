@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -8,23 +9,24 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
     private bool _isDisposed;
     public bool isDisposed => _isDisposed;
 
-    private Material _protanopiaMaterial;
-    private Material _deuteranopiaMaterial;
-    private Material _tritanopiaMaterial;
-    private Material _achromatopsiaMaterial;
-    private Material _currentMaterial;
+    private Material _material;
+    private Dictionary<ColorBlindnessMode, ColorBlindnessChannels> _settings;
+
+    private ColorBlindnessChannels _currentChannels;
 
     private RenderTargetIdentifier _source;
 
-    private static readonly string _profilerTag = "ColorBlindness";
+    private const string _profilerTag = "ColorBlindness";
     private static readonly ProfilingSampler _profilingSampler = new ProfilingSampler(_profilerTag);
 
-    public ColorBlindnessRenderPass(Material protanopiaMaterial, Material deuteranopiaMaterial, Material tritanopiaMaterial, Material achromatopsiaMaterial)
+    private static readonly int _redChannelID = Shader.PropertyToID("_RedChannel");
+    private static readonly int _greenChannelID = Shader.PropertyToID("_GreenChannel");
+    private static readonly int _blueChannelID = Shader.PropertyToID("_BlueChannel");
+
+    public ColorBlindnessRenderPass(Material material, Dictionary<ColorBlindnessMode, ColorBlindnessChannels> settings)
     {
-        _protanopiaMaterial = protanopiaMaterial;
-        _deuteranopiaMaterial = deuteranopiaMaterial;
-        _tritanopiaMaterial = tritanopiaMaterial;
-        _achromatopsiaMaterial = achromatopsiaMaterial;
+        _material = material;
+        _settings = settings;
     }
 
     public void Dispose()
@@ -38,7 +40,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
 
     private void OnDispose()
     {
-        _currentMaterial = null;
+        _currentChannels = null;
     }
 
     private void UpdateSettings()
@@ -46,33 +48,37 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         var component = VolumeManager.instance.stack.GetComponent<ColorBlindness>();
         if (component == null || component.IsActive() == false)
         {
-            _currentMaterial = null;
+            _currentChannels = null;
             return;
         }
 
         var mode = component.blindnessMode.overrideState ? component.blindnessMode.value : ColorBlindnessMode.Normal;
-        _currentMaterial = GetMaterial(mode);
+        var channels = GetChannel(mode, defaultValue: null);
+
+        if (_currentChannels != channels)
+        {
+            _currentChannels = channels;
+            if (_currentChannels != null)
+            {
+                _material.SetVector(_redChannelID, _currentChannels.red);
+                _material.SetVector(_greenChannelID, _currentChannels.green);
+                _material.SetVector(_blueChannelID, _currentChannels.blue);
+            }
+        }
     }
 
-    private Material GetMaterial(ColorBlindnessMode mode)
+    private ColorBlindnessChannels GetChannel(ColorBlindnessMode mode, ColorBlindnessChannels defaultValue)
     {
-        switch (mode)
+        if (_settings == null)
+            return defaultValue;
+
+        if (_settings.TryGetValue(mode, out var channels))
         {
-            case ColorBlindnessMode.Protanopia:
-                return _protanopiaMaterial;
-
-            case ColorBlindnessMode.Deuteranopia:
-                return _deuteranopiaMaterial;
-
-            case ColorBlindnessMode.Tritanopia:
-                return _tritanopiaMaterial;
-
-            case ColorBlindnessMode.Achromatopsia:
-                return _achromatopsiaMaterial;
-
-            case ColorBlindnessMode.Normal:
-            default:
-                return null;
+            return channels;
+        }
+        else
+        {
+            return defaultValue;
         }
     }
 
@@ -97,7 +103,10 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
 
         UpdateSettings();
 
-        if (_currentMaterial == null)
+        if (_material == null)
+            return;
+
+        if (_currentChannels == null)
             return;
 
         ref var cameraData = ref renderingData.cameraData;
@@ -106,7 +115,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         using (new ProfilingScope(cmd, _profilingSampler))
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Blit(cmd, _source, _source, _currentMaterial);
+            Blit(cmd, _source, _source, _material);
 #pragma warning restore CS0618 // Type or member is obsolete
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
