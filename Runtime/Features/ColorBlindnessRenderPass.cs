@@ -14,7 +14,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
 
     private ColorBlindnessChannels _currentChannels;
 
-    private RenderTargetIdentifier _source;
+    private RTHandle _cameraColorTarget;
 
     private const string _profilerTag = "ColorBlindness";
     private static readonly ProfilingSampler _profilingSampler = new ProfilingSampler(_profilerTag);
@@ -86,14 +86,14 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
     {
         base.OnCameraSetup(cmd, ref renderingData);
 
-        _source = renderingData.cameraData.renderer.cameraColorTargetHandle;
+        _cameraColorTarget = renderingData.cameraData.renderer.cameraColorTargetHandle;
     }
 
     public override void OnCameraCleanup(CommandBuffer cmd)
     {
         base.OnCameraCleanup(cmd);
 
-        _source = default;
+        _cameraColorTarget = default;
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -114,9 +114,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         var cmd = CommandBufferPool.Get();
         using (new ProfilingScope(cmd, _profilingSampler))
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            Blit(cmd, _source, _source, _material);
-#pragma warning restore CS0618 // Type or member is obsolete
+            Blitter.BlitCameraTexture(cmd, _cameraColorTarget, _cameraColorTarget, _material, 0);
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
         }

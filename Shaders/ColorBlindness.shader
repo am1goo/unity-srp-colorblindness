@@ -10,46 +10,32 @@ Shader "Hidden/Color Blindness"
 
     SubShader
     {
-        // No culling or depth
-        Cull Off ZWrite Off ZTest Always
-
+        Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline" }
+        ZWrite Off Cull Off
         Pass
         {
-            CGPROGRAM
-            #pragma vertex vert
+            Name "Color Blindness Pass"
+HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+
+            #pragma vertex Vert
             #pragma fragment frag
 
-            #include "UnityCG.cginc"
+            // Set the color texture from the camera as the input texture
+            TEXTURE2D_X(_CameraOpaqueTexture);
+            SAMPLER(sampler_CameraOpaqueTexture);
 
-            struct appdata
+            half3 _RedChannel;
+            half3 _GreenChannel;
+            half3 _BlueChannel;
+
+            half4 frag(Varyings input) : SV_Target
             {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-            struct v2f
-            {
-                float2 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-            };
-
-            v2f vert(appdata v)
-            {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
-                return o;
-            }
-
-            sampler2D _MainTex;
-            fixed3 _RedChannel;
-            fixed3 _GreenChannel;
-            fixed3 _BlueChannel;
-
-            fixed4 frag(v2f i) : SV_Target
-            {
-                fixed4 c = tex2D(_MainTex, i.uv);
-                return fixed4
+                float4 c = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, input.texcoord);
+                return half4
                 (
                     c.r * _RedChannel.r + c.g * _RedChannel.g + c.b * _RedChannel.b,
                     c.r * _GreenChannel.r + c.g * _GreenChannel.g + c.b * _GreenChannel.b,
@@ -57,7 +43,7 @@ Shader "Hidden/Color Blindness"
                     c.a
                 );
             }
-            ENDCG
+ENDHLSL
         }
     }
 }

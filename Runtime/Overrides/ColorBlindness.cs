@@ -10,7 +10,7 @@ namespace UnityEngine.Rendering.Universal
 
         public bool IsActive()
         {
-            return blindnessMode.overrideState && blindnessMode.value != ColorBlindnessMode.Normal;
+            return active && blindnessMode.overrideState && blindnessMode.value != ColorBlindnessMode.Normal;
         }
 
         public bool IsTileCompatible()
