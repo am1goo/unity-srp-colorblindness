@@ -46,7 +46,7 @@ public class ColorBlindnessRendererFeature : ScriptableRendererFeature
         }
         else
         {
-            m_Material = new Material(m_Shader);
+            m_Material = CoreUtils.CreateEngineMaterial(m_Shader);
         }
 
         m_ColorBlindnessPass = new ColorBlindnessRenderPass(m_Material, m_Settings);

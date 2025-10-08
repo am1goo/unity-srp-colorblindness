@@ -87,6 +87,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         base.OnCameraSetup(cmd, ref renderingData);
 
         _cameraColorTarget = renderingData.cameraData.renderer.cameraColorTargetHandle;
+        ConfigureTarget(_cameraColorTarget);
     }
 
     public override void OnCameraCleanup(CommandBuffer cmd)
@@ -108,8 +109,6 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
 
         if (_currentChannels == null)
             return;
-
-        ref var cameraData = ref renderingData.cameraData;
 
         var cmd = CommandBufferPool.Get();
         using (new ProfilingScope(cmd, _profilingSampler))

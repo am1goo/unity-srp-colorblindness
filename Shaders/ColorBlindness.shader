@@ -23,8 +23,7 @@ HLSLPROGRAM
             #pragma fragment frag
 
             // Set the color texture from the camera as the input texture
-            TEXTURE2D_X(_CameraOpaqueTexture);
-            SAMPLER(sampler_CameraOpaqueTexture);
+            SAMPLER(sampler_BlitTexture);
 
             half3 _RedChannel;
             half3 _GreenChannel;
@@ -34,7 +33,7 @@ HLSLPROGRAM
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                float4 c = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, input.texcoord);
+                float4 c = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, input.texcoord);
                 return half4
                 (
                     c.r * _RedChannel.r + c.g * _RedChannel.g + c.b * _RedChannel.b,
