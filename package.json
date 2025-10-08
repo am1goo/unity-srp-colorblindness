@@ -1,6 +1,6 @@
 {
     "name": "com.am1goo.unity.srp.colorblindness",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "displayName": "SRP Color Blindness",
     "description": "Post-processing 'Color Blindness' feature for SRP",
 	"dependencies": {
