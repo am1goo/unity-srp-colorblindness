@@ -47,6 +47,8 @@ That's it!
 
 ## Requirements
 - Universal Render Pipeline 14.0.2
+- 'Native RenderPass' should be enabled
+- 'Anti Aliasing (MSAA)' should be enabled (in pipeline asset and in camera settings)
 
 ## Tested in
 - Unity 2022.3.x
