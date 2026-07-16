@@ -15,7 +15,6 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
     private ColorBlindnessChannels _currentChannels;
 
     private RTHandle _cameraColorTarget;
-    private RTHandle _tempColorTarget;
 
     private const string _profilerTag = "ColorBlindness";
     private static readonly ProfilingSampler _profilingSampler = new ProfilingSampler(_profilerTag);
@@ -83,15 +82,6 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         }
     }
 
-    public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
-    {
-        base.Configure(cmd, cameraTextureDescriptor);
-
-        var descriptor = cameraTextureDescriptor;
-        descriptor.depthBufferBits = 0;
-        RenderingUtils.ReAllocateIfNeeded(ref _tempColorTarget, descriptor);
-    }
-
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
     {
         base.OnCameraSetup(cmd, ref renderingData);
@@ -104,11 +94,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
     {
         base.OnCameraCleanup(cmd);
 
-        if (_tempColorTarget != null)
-        {
-            _tempColorTarget.Release();
-            _tempColorTarget = null;
-        }
+        //do nothing
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -127,8 +113,7 @@ public class ColorBlindnessRenderPass : ScriptableRenderPass, IDisposable
         var cmd = CommandBufferPool.Get();
         using (new ProfilingScope(cmd, _profilingSampler))
         {
-            Blit(cmd, _cameraColorTarget, _tempColorTarget, _material, 0); 
-            Blit(cmd, _tempColorTarget, _cameraColorTarget);
+            Blit(cmd, ref renderingData, _material, 0);
         }
         context.ExecuteCommandBuffer(cmd);
         cmd.Clear();
