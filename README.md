@@ -21,7 +21,7 @@ Support of all major types of blindness:
 ##### via Unity Package Manager
 The latest version can be installed via [package manager](https://docs.unity3d.com/Manual/upm-ui-giturl.html) using following git URL:
 ```
-https://github.com/am1goo/unity-srp-colorblindness.git#1.0.5
+https://github.com/am1goo/unity-srp-colorblindness.git#1.0.6
 ```
 
 ## How to use?
@@ -47,8 +47,6 @@ That's it!
 
 ## Requirements
 - Universal Render Pipeline 14.0.2
-- 'Native RenderPass' should be enabled
-- 'Anti Aliasing (MSAA)' should be enabled (in pipeline asset and in camera settings)
 
 ## Tested in
 - Unity 2022.3.x
