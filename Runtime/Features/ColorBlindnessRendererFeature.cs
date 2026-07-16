@@ -76,13 +76,6 @@ public class ColorBlindnessRendererFeature : ScriptableRendererFeature
             m_ColorBlindnessPass = null;
         }
 
-        if (Application.isPlaying)
-        {
-            Destroy(m_Material);
-        }
-        else
-        {
-            DestroyImmediate(m_Material);
-        }
+        CoreUtils.Destroy(m_Material);
     }
 }

@@ -38,19 +38,6 @@ namespace UnityEditor.Rendering.Universal
                 EditorGUILayout.HelpBox("Render data isn't found", MessageType.Error);
                 return;
             }
-
-            if (rendererData.useNativeRenderPass == false)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.HelpBox("'Native RenderPass' should be enabled", MessageType.Error);
-                if (GUILayout.Button("Fix", GUILayout.Width(30)))
-                {
-                    rendererData.useNativeRenderPass = true;
-                    EditorUtility.SetDirty(urpAsset);
-                }
-                EditorGUILayout.EndHorizontal();
-                return;
-            }
         }
 
         private static PropertyInfo _pi;

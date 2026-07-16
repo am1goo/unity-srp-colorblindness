@@ -2,7 +2,6 @@ Shader "Hidden/Color Blindness"
 {
     Properties
     {
-        _MainTex("Texture", 2D) = "white" {}
         _RedChannel("Red Channel", Color) = (1, 0, 0, 0)
         _GreenChannel("Green Channel", Color) = (0, 1, 0, 0)
         _BlueChannel("Blue Channel", Color) = (0, 0, 1, 0)
@@ -12,6 +11,7 @@ Shader "Hidden/Color Blindness"
     {
         Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline" }
         ZWrite Off Cull Off
+
         Pass
         {
             Name "Color Blindness Pass"
